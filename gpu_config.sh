@@ -65,12 +65,22 @@ setup_render_node() {
     return 1
 }
 
+gpu_setup_mali() {
+    echo "use GPU host mode"
+
+    setprop ro.hardware.egl mali
+    setprop ro.hardware.gralloc redroid
+    setprop debug.stagefright.ccodec 4
+    setprop ro.boot.redroid_fps 60
+}
+
 gpu_setup_host() {
     echo "use GPU host mode"
 
     setprop ro.hardware.egl mesa
-    setprop ro.hardware.gralloc gbm
+    # setprop ro.hardware.gralloc gbm
     setprop ro.boot.redroid_fps 30
+
 }
 
 gpu_setup_guest() {
@@ -102,6 +112,8 @@ gpu_setup() {
         gpu_setup_host
     elif [ "$mode" = "guest" ]; then
         gpu_setup_guest
+    elif [ "$mode" = "mali" ]; then
+        gpu_setup_mali
     elif [ "$mode" = "auto" ]; then
          echo "use GPU auto mode"
          if setup_render_node; then
